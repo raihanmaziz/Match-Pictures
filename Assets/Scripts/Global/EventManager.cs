@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PaintAstic.Global
+namespace MatchPictures.Global
 {
     [System.Serializable]
     public class TypedEvent : UnityEvent<object> { }
