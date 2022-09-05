@@ -1,8 +1,10 @@
 using MatchPictures.Global;
+using MatchPictures.Global.Save;
 using MatchPictures.Message;
 using MatchPictures.Scene.Gameplay.InputRaycasts;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace MatchPictures.Scene.Gameplay.TileObjects
 {
@@ -11,23 +13,19 @@ namespace MatchPictures.Scene.Gameplay.TileObjects
         private int _indexX;
         private int _indexY;
         private int _indexType;
-        private int _typeLength;
-        private List<Color> _tileColor = new List<Color>();
-        private string _theme;
+        [SerializeField] private string[] _themes;
         [SerializeField] private Sprite[] _sprites;
+
+        private string _currentTheme;
 
         public int indexX => _indexX;
         public int indexY => _indexY;
         public int indexType => _indexType;
-        public int typeLength => _typeLength;
 
         private void Awake()
         {
-            _theme = "fruit";
-            _tileColor.Add(Color.white);
-            _tileColor.Add(Color.black);
-            _tileColor.Add(Color.green);
-            _typeLength = _tileColor.Count;
+            _currentTheme = _themes[SaveData.saveInstance.currentTheme];
+            _sprites = Resources.LoadAll<Sprite>("Image/" + _currentTheme);
         }
 
         public void SetAllIndex(int X, int Y, int Type)
@@ -40,8 +38,7 @@ namespace MatchPictures.Scene.Gameplay.TileObjects
 
         public void SetImage(int Type)
         {
-            //gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Image/" + _theme);
-            gameObject.GetComponent<Renderer>().material.color = _tileColor[Type];
+            gameObject.GetComponent<SpriteRenderer>().sprite = _sprites[Type];
         }
 
         public void OnRaycasted()

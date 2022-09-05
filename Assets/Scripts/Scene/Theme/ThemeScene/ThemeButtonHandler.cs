@@ -1,18 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class ThemeButtonHandler : MonoBehaviour
+namespace MatchPictures.Scene.Theme.ThemeScene
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ThemeButtonHandler : MonoBehaviour
     {
-        
-    }
+        [SerializeField] Button _backButton;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void Awake()
+        {
+            _backButton.onClick.RemoveAllListeners();
+            _backButton.onClick.AddListener(OpenHome);
+        }
+
+        private void OpenHome()
+        {
+            SceneManager.LoadScene("HomeScene");
+        }
     }
 }
+

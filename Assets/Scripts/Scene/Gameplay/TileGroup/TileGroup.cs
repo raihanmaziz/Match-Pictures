@@ -1,7 +1,7 @@
-using UnityEngine;
-using MatchPictures.Scene.Gameplay.TileObjects;
 using MatchPictures.Global;
 using MatchPictures.Message;
+using MatchPictures.Scene.Gameplay.TileObjects;
+using UnityEngine;
 
 namespace MatchPictures.Scene.Gameplay.TileGroups
 {
@@ -12,6 +12,9 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
         public TileObject[,] tileList { get; private set; }
 
         [SerializeField] private TileObject _tilePrefab;
+        [SerializeField] private int _typeLength = 3;
+        [SerializeField] private int[] _typeCounter = { 0, 0, 0 };
+
 
         private int _tileCount = 0;
         private int _lastX = -1;
@@ -20,7 +23,7 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
 
         private void Awake()
         {
-            if (row*column %2 != 0)
+            if (row * column % 2 != 0)
             {
                 row++;
             }
@@ -42,15 +45,37 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
             tileList = new TileObject[column, row];
             for (int x = 0; x < column; x++)
             {
-                for (int y = 0; y < row; y++)
+                for (int y = 0; y < row / 2; y++)
                 {
                     Vector2 spawnPosition = new Vector2(x, y);
                     TileObject tileObjects = Instantiate(_tilePrefab, spawnPosition, Quaternion.identity, transform);
 
                     tileList[x, y] = tileObjects;
-                    
-                    tileObjects.gameObject.name = "Tile( " + ("X:" + x + " ,Z:" + y + " )");
-                    tileObjects.SetAllIndex(x, y, Random.Range(0, tileObjects.typeLength));
+
+                    tileObjects.gameObject.name = "Tile( " + ("X: " + x + ", Y:" + y + " )");
+                    int type = Random.Range(0, _typeLength);
+                    tileObjects.SetAllIndex(x, y, type);
+                    _typeCounter[type]++;
+                    _tileCount++;
+                }
+            }
+            for (int x = 0; x < column; x++)
+            {
+                for (int y = row / 2; y < row; y++)
+                {
+                    Vector2 spawnPosition = new Vector2(x, y);
+                    TileObject tileObjects = Instantiate(_tilePrefab, spawnPosition, Quaternion.identity, transform);
+
+                    tileList[x, y] = tileObjects;
+
+                    tileObjects.gameObject.name = "Tile( " + ("X: " + x + ", Y:" + y + " )");
+                    int type = Random.Range(0, _typeLength);
+                    while (_typeCounter[type] == 0)
+                    {
+                        type = Random.Range(0, _typeLength);
+                    }
+                    tileObjects.SetAllIndex(x, y, type);
+                    _typeCounter[type]--;
                     _tileCount++;
                 }
             }
@@ -71,7 +96,10 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
             {
                 if (_lastType == tileList[x, y].indexType)
                 {
-                    DespawnTile(x, y);
+                    if (!(_lastX == x && _lastY == y))
+                    {
+                        DespawnTile(x, y);
+                    }
                 }
                 _lastType = -1;
             }

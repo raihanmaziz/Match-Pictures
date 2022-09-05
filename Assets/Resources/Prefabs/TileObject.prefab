@@ -124,4 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba926f0bab6bb824ab307cd4ae249409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _themes:
+  - fruit
+  - food
+  - weapon
+  - random
   _sprites: []

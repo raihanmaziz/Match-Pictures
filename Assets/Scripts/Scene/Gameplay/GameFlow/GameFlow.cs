@@ -1,4 +1,5 @@
 using MatchPictures.Global;
+using MatchPictures.Global.Currency;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -37,6 +38,7 @@ namespace MatchPictures.Scene.Gameplay.GameFlow
             if (isWin)
             {
                 _winPanel.SetActive(true);
+                CurrencyData.currencyInstance.AddGold();
             }
             else
             {
