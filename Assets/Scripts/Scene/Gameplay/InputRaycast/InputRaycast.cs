@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MatchPictures.Scene.Gameplay.InputRaycast
+namespace MatchPictures.Scene.Gameplay.InputRaycasts
 {
     public class InputRaycast : MonoBehaviour
     {
