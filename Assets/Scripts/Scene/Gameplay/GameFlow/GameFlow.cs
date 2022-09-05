@@ -1,5 +1,7 @@
 using MatchPictures.Global;
 using MatchPictures.Global.Currency;
+using MatchPictures.Scene.Gameplay.GameTimers;
+using MatchPictures.Scene.Gameplay.TileGroups;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,19 +23,22 @@ namespace MatchPictures.Scene.Gameplay.GameFlow
 
         private void OnEnable()
         {
-            EventManager.StartListening("TilesCleared", SetGameOverState);
-            EventManager.StartListening("TimeOver", SetGameOverState);
+            GameTimer.OnTimeOver += SetGameOverState;
+            TileGroup.OnTilesCleared += SetGameOverState;
+            //EventManager.StartListening("TilesCleared", SetGameOverState);
+            //EventManager.StartListening("TimeOver", SetGameOverState);
         }
 
         private void OnDisable()
         {
-            EventManager.StopListening("TilesCleared", SetGameOverState);
-            EventManager.StopListening("TimeOver", SetGameOverState);
+            GameTimer.OnTimeOver -= SetGameOverState;
+            TileGroup.OnTilesCleared -= SetGameOverState;
+            //EventManager.StopListening("TilesCleared", SetGameOverState);
+            //EventManager.StopListening("TimeOver", SetGameOverState);
         }
 
-        private void SetGameOverState(object data)
+        private void SetGameOverState(bool isWin)
         {
-            bool isWin = (bool)data;
             _gameOverPanel.SetActive(true);
             if (isWin)
             {
@@ -45,6 +50,21 @@ namespace MatchPictures.Scene.Gameplay.GameFlow
                 _losePanel.SetActive(true);
             }
         }
+
+        //private void SetGameOverState(object data)
+        //{
+        //    bool isWin = (bool)data;
+        //    _gameOverPanel.SetActive(true);
+        //    if (isWin)
+        //    {
+        //        _winPanel.SetActive(true);
+        //        CurrencyData.currencyInstance.AddGold();
+        //    }
+        //    else
+        //    {
+        //        _losePanel.SetActive(true);
+        //    }
+        //}
 
         private void OpenHome()
         {

@@ -7,6 +7,9 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
 {
     public class TileGroup : MonoBehaviour
     {
+        public delegate void TilesCleared(bool isWin);
+        public static event TilesCleared OnTilesCleared;
+
         public int column { get; private set; } = 5;
         public int row { get; private set; } = 6;
         public TileObject[,] tileList { get; private set; }
@@ -32,12 +35,14 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
 
         private void OnEnable()
         {
-            EventManager.StartListening("TileClicked", TryMatchClickedTiles);
+            TileObject.OnTileClicked += TryMatchClickedTiles;
+            //EventManager.StartListening("TileClicked", TryMatchClickedTiles);
         }
 
         private void OnDisable()
         {
-            EventManager.StopListening("TileClicked", TryMatchClickedTiles);
+            TileObject.OnTileClicked -= TryMatchClickedTiles;
+            //EventManager.StopListening("TileClicked", TryMatchClickedTiles);
         }
 
         private void SpawnTile()
@@ -81,11 +86,8 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
             }
         }
 
-        private void TryMatchClickedTiles(object Message)
+        private void TryMatchClickedTiles(int x, int y)
         {
-            TileClickedMessage message = (TileClickedMessage)Message;
-            int x = message.x;
-            int y = message.y;
             if (_lastType == -1)
             {
                 _lastX = x;
@@ -105,6 +107,30 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
             }
         }
 
+        //private void TryMatchClickedTiles(object Message)
+        //{
+        //    TileClickedMessage message = (TileClickedMessage)Message;
+        //    int x = message.x;
+        //    int y = message.y;
+        //    if (_lastType == -1)
+        //    {
+        //        _lastX = x;
+        //        _lastY = y;
+        //        _lastType = tileList[x, y].indexType;
+        //    }
+        //    else
+        //    {
+        //        if (_lastType == tileList[x, y].indexType)
+        //        {
+        //            if (!(_lastX == x && _lastY == y))
+        //            {
+        //                DespawnTile(x, y);
+        //            }
+        //        }
+        //        _lastType = -1;
+        //    }
+        //}
+
         private void DespawnTile(int X, int Y)
         {
             tileList[X, Y].gameObject.SetActive(false);
@@ -112,7 +138,8 @@ namespace MatchPictures.Scene.Gameplay.TileGroups
             _tileCount -= 2;
             if (_tileCount == 0)
             {
-                EventManager.TriggerEvent("TilesCleared", true);
+                OnTilesCleared(true);
+                //EventManager.TriggerEvent("TilesCleared", true);
             }
         }
     }

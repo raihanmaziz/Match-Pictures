@@ -10,6 +10,9 @@ namespace MatchPictures.Scene.Gameplay.TileObjects
 {
     public class TileObject : MonoBehaviour, IRaycastable
     {
+        public delegate void TileClicked(int x, int y);
+        public static event TileClicked OnTileClicked;
+
         private int _indexX;
         private int _indexY;
         private int _indexType;
@@ -43,7 +46,8 @@ namespace MatchPictures.Scene.Gameplay.TileObjects
 
         public void OnRaycasted()
         {
-            EventManager.TriggerEvent("TileClicked", new TileClickedMessage(_indexX, _indexY));
+            OnTileClicked(_indexX, _indexY);
+            //EventManager.TriggerEvent("TileClicked", new TileClickedMessage(_indexX, _indexY));
         }
     }
 }

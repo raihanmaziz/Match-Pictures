@@ -6,6 +6,9 @@ namespace MatchPictures.Scene.Gameplay.GameTimers
 {
     public class GameTimer : MonoBehaviour
     {
+        public delegate void TimeOver(bool isWin);
+        public static event TimeOver OnTimeOver;
+
         [SerializeField] private TextMeshProUGUI _timerText;
         [SerializeField] private float _timeLeft = 30f;
 
@@ -19,7 +22,8 @@ namespace MatchPictures.Scene.Gameplay.GameTimers
             else
             {
                 _timeLeft = 0;
-                EventManager.TriggerEvent("TimeOver", false);
+                OnTimeOver(false);
+                //EventManager.TriggerEvent("TimeOver", false);
             }
         }
 
