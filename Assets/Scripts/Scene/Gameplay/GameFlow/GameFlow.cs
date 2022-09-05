@@ -1,5 +1,7 @@
 using MatchPictures.Global;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace MatchPictures.Scene.Gameplay.GameFlow
 {
@@ -8,6 +10,13 @@ namespace MatchPictures.Scene.Gameplay.GameFlow
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _winPanel;
         [SerializeField] private GameObject _losePanel;
+        [SerializeField] private Button _backButton;
+
+        private void Awake()
+        {
+            _backButton.onClick.RemoveAllListeners();
+            _backButton.onClick.AddListener(OpenHome);
+        }
 
         private void OnEnable()
         {
@@ -33,6 +42,11 @@ namespace MatchPictures.Scene.Gameplay.GameFlow
             {
                 _losePanel.SetActive(true);
             }
+        }
+
+        private void OpenHome()
+        {
+            SceneManager.LoadScene("HomeScene");
         }
     }
 }
